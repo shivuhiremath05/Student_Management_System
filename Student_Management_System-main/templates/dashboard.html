@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Student Registration System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-red: #DC143C;
+            --primary-dark: #1a1a1a;
+            --accent-blue: #003DA5;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-red) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.3);
+        }
+
+        .dashboard-header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--primary-red);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card-icon {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+        }
+
+        .stat-card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Chart Cards */
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .chart-card h5 {
+            color: var(--primary-red);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(90deg, var(--primary-red) 0%, #b91230 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(90deg, #b91230 0%, var(--primary-red) 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        .footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-top: 3px solid var(--primary-red);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 1.8rem;
+            }
+            .stat-card-value {
+                font-size: 1.8rem;
+            }
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap"></i> JT College
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/students/dashboard/">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1><i class="fas fa-chart-line"></i> Dashboard & Analytics</h1>
+            <p>Student Registration System - Overview and Statistics</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/" class="btn-primary-custom">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            <a href="/students/add/" class="btn-primary-custom">
+                <i class="fas fa-user-plus"></i> Add New Student
+            </a>
+        </div>
+
+        <!-- Statistics Row -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-card-value">{{ total_students }}</div>
+                    <div class="stat-card-label">Total Students Enrolled</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-card-value">6</div>
+                    <div class="stat-card-label">Total Semesters</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="stat-card-value">BCA</div>
+                    <div class="stat-card-label">Program Offered</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h5><i class="fas fa-chart-pie"></i> Students by Semester</h5>
+                    <div class="chart-container">
+                        <canvas id="semesterPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h5><i class="fas fa-chart-bar"></i> Semester Distribution</h5>
+                    <div class="chart-container">
+                        <canvas id="semesterBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="row">
+            <div class="col-12">
+                <div class="chart-card">
+                    <h5><i class="fas fa-info-circle"></i> System Information</h5>
+                    <div>
+                        <p><strong>Institution:</strong> K.L.E. Society's Jagadguru Tontadarya College</p>
+                        <p><strong>Program:</strong> Bachelor of Computer Applications (BCA)</p>
+                        <p><strong>Duration:</strong> 3 Years (6 Semesters)</p>
+                        <p><strong>Focus:</strong> Software Education with blend of theory & practice for rural & urban students</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2026 K.L.E. Society's JT College. All rights reserved. | BCA Program</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Data from server
+        const semesters = {{ semesters | safe }};
+        const counts = {{ counts | safe }};
+
+        // Color palette
+        const colors = ['#DC143C', '#003DA5', '#FFA500', '#4CAF50', '#9C27B0', '#FF6B6B'];
+
+        // Pie Chart
+        const pieCtx = document.getElementById('semesterPieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: semesters.map(s => `Semester ${s}`),
+                datasets: [{
+                    data: counts,
+                    backgroundColor: colors,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Bar Chart
+        const barCtx = document.getElementById('semesterBarChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: semesters.map(s => `Sem ${s}`),
+                datasets: [{
+                    label: 'Number of Students',
+                    data: counts,
+                    backgroundColor: '#DC143C',
+                    borderColor: '#b91230',
+                    borderWidth: 2,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
